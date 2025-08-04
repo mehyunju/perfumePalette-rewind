@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- Root Context: 애플리케이션 전반에 걸쳐 공유되는 리소스 정의 -->
+
+    <!-- Service 및 Repository 컴포넌트 스캔 -->
+    <context:component-scan base-package="com.prac.perfumePalette" />
+
+    <!-- MyBatis 설정 -->
+    <!-- db 연결 설정-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/perfumePalette?serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true" />
+        <property name="username" value="perfume_user" />
+        <property name="password" value="1234" />
+    </bean>
+
+    <!-- MyBatis 연동 설정 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml" /> <!-- MyBatis 설정 파일 경로 -->
+    </bean>
+
+    <!-- SqlSessionTemplate (MyBatis 사용을 위한 핵심 빈) -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory" />
+    </bean>
+
+</beans>

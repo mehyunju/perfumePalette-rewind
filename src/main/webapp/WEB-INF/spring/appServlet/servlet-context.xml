@@ -1,0 +1,27 @@
+<beans:beans
+        xmlns="http://www.springframework.org/schema/mvc"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- DispatcherServlet의 요청 처리 인프라 정의 -->
+
+    <!-- Spring MVC의 @Controller 어노테이션 활성화 -->
+    <annotation-driven />
+
+    <!-- /resources/** 요청에 대해 정적 리소스(이미지, CSS, JS 등) 제공 -->
+    <resources mapping="/resources/**" location="/resources/" />
+
+    <!-- 컨트롤러가 반환하는 뷰 이름을 JSP 파일 경로로 변환 -->
+    <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <beans:property name="prefix" value="/WEB-INF/views/" />
+        <beans:property name="suffix" value=".jsp" />
+    </beans:bean>
+
+    <!-- 지정한 패키지 내의 컴포넌트(@Controller, @Service, @Repository 등) 자동 검색 -->
+    <context:component-scan base-package="com.prac.perfumePalette" />
+
+</beans:beans>
