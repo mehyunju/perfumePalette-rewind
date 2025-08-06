@@ -12,44 +12,48 @@ public class MemberServiceImpl implements MemberService {
     // 회원가입
     @Override
     public int insertMember(Member member) {
-        int result = mRepository.insertMember(member);
-        return result;
+        return mRepository.insertMember(member);
     }
 
     // 아이디 유효성 검사
     @Override
     public int checkId(String memberId) {
-        int result = mRepository.checkId(memberId);
-        return result;
+        return mRepository.checkId(memberId);
     }
 
     // 닉네임 유효성 검사
     @Override
     public int checkNickname(String memberNickname) {
-        int result = mRepository.checkNickname(memberNickname);
-        return result;
+        return mRepository.checkNickname(memberNickname);
     }
 
     // 이메일 유효성 검사
     @Override
     public int checkEmail(String memberEmail) {
-        int result = mRepository.checkEmail(memberEmail);
-        return result;
+        return mRepository.checkEmail(memberEmail);
     }
 
     // 로그인
     @Override
     public Member login(Member member) {
-        Member loginUser = mRepository.login(member);
-        return loginUser;
+        return mRepository.login(member);
     }
 
     // 아이디 찾기
     @Override
     public Member findId(Member member) {
-        Member getUser = mRepository.findId(member);
-        return getUser;
+        return mRepository.findId(member);
     }
 
+    // 비밀번호 찾기
+    @Override
+    public Member findPw(Member member) {
+        return mRepository.findPw(member);
+    }
 
+    // 비밀번호 변경
+    @Override
+    public int updatePw(Member member) {
+        return mRepository.updatePw(member);
+    }
 }

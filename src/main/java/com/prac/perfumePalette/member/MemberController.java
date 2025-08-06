@@ -18,13 +18,12 @@ public class MemberController {
     @Autowired
     private MemberService mService;
 
-    //============== 회원가입 ==============
+    //============ 회원가입 =================
     @GetMapping("/enroll")
     public ModelAndView enroll(ModelAndView mv) {
         mv.setViewName("member/enroll");
         return mv;
     }
-
     @PostMapping("/enroll")
     public ModelAndView enroll(ModelAndView mv,
                                @ModelAttribute Member member,
@@ -55,7 +54,7 @@ public class MemberController {
         return mv;
     }
 
-    //============== 유효성검사 ==============
+    //============ 유효성검사 =================
     @PostMapping(value = "/idChk", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public int idCheck(@RequestParam String memberId) {
@@ -68,7 +67,6 @@ public class MemberController {
         }
         return result;
     }
-
     @PostMapping(value = "/nicknameChk", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public int nickNameCheck(@RequestParam String memberNickname) {
@@ -81,7 +79,6 @@ public class MemberController {
         }
         return result;
     }
-
     @PostMapping(value = "/pwChk", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public int pwCheck(@RequestParam String memberPw, @RequestParam String reMemberPw) {
@@ -98,7 +95,6 @@ public class MemberController {
         }
         return result;
     }
-
     @PostMapping(value = "/emailChk", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public int emailCheck(@RequestParam String memberEmail) {
@@ -118,7 +114,7 @@ public class MemberController {
         return result;
     }
 
-    //============== 로그인 ==============
+    //============ 로그인 =================
     @GetMapping("/login")
     public ModelAndView login(ModelAndView mv, HttpSession session) {
 
@@ -135,7 +131,6 @@ public class MemberController {
         mv.setViewName("member/login");
         return mv;
     }
-
     @PostMapping("/login")
     public ModelAndView login(ModelAndView mv, HttpSession session,
                               @ModelAttribute Member member) {
@@ -176,7 +171,7 @@ public class MemberController {
         return mv;
     }
 
-    //============== 로그아웃 ==============
+    //============ 로그아웃 =================
     @GetMapping("logout")
     public ModelAndView logout(HttpServletRequest request, ModelAndView mv) {
         try {
@@ -201,7 +196,7 @@ public class MemberController {
         return mv;
     }
 
-    //============== 아이디 찾기 ==============
+    //============ 아이디 찾기 =================
     @GetMapping("/findId")
     public ModelAndView findId(ModelAndView mv, HttpSession session) {
         // 아이디 찾기 뷰 띄우기
@@ -219,7 +214,6 @@ public class MemberController {
         }
         return mv;
     }
-
     @PostMapping("/findId")
     public ModelAndView findId(ModelAndView mv, @ModelAttribute Member member) {
 
@@ -249,7 +243,7 @@ public class MemberController {
         return mv;
     }
 
-    //============== 비밀번호 찾기 ==============
+    //============ 비밀번호 찾기 =================
     @GetMapping("/findPw")
     public ModelAndView findPw(ModelAndView mv, HttpSession session) {
         // 비밀번호 찾기 뷰 띄우기
@@ -267,4 +261,78 @@ public class MemberController {
         }
         return mv;
     }
+    @PostMapping("findPw")
+    public ModelAndView findPw(@ModelAttribute Member member, ModelAndView mv) {
+
+        try {
+            // member 정보 찾기
+            // 아이디, 이름, 이메일 or 전화번호가 담겨있음
+            Member getUser = mService.findPw(member);
+
+            if (getUser != null) {
+                // 일치하는 회원이 있으면 비밀번호 변경 페이지로 이동
+                mv.addObject("member", getUser);
+                mv.setViewName("member/changePw");
+
+            } else {
+                // 일치하는 회원이 없으면 알람띄우기
+                Alert alert = new Alert("/member/findPw", "일치하는 회원 정보가 존재하지 않습니다.");
+                mv.addObject("alert", alert);
+                mv.setViewName("common/alert");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mv.addObject("msg", e.getMessage());
+            mv.setViewName("common/error");
+        }
+        return mv;
+    }
+
+    //============ 비밀번호 변경 =================
+    @PostMapping("/changePw")
+    public ModelAndView changePw(ModelAndView mv, @ModelAttribute Member member,
+                                 String newPw, String confirmPw) {
+
+        try {
+            // 비밀번호 유효성 체크
+            String pwPattern = "^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$";
+            boolean matchesPw = newPw.matches(pwPattern);
+
+            // 비밀번호와 비밀번호 확인값이 다를 경우
+            if (!newPw.equals(confirmPw)) {
+                Alert alert = new Alert("/member/findPw", "비밀번호 확인이 일치하지 않습니다.");
+                mv.addObject("alert", alert);
+                mv.setViewName("common/alert");
+            }
+
+            // 비밀번호 설정 후 업데이트
+            member.setMemberPw(newPw);
+            int result = mService.updatePw(member);
+
+            // 비밀번호 변경 성공 여부에 따른 알람 처리
+            if (result > 0) {
+                Alert alert = new Alert("/member/login", "비밀번호 변경에 성공하였습니다.");
+                mv.addObject("alert", alert);
+                mv.setViewName("common/alert");
+            } else {
+                Alert alert = new Alert("/member/findPw", "비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
+                mv.addObject("alert", alert);
+                mv.setViewName("common/alert");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mv.addObject("msg", e.getMessage());
+            mv.setViewName("common/error");
+        }
+        return mv;
+    }
+
+    //============ 주문내역 조회 =================
+    @GetMapping("/orderList")
+    public ModelAndView orderList(ModelAndView mv) {
+        mv.setViewName("member/orderList");
+        return mv;
+    }
+
 }

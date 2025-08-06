@@ -10,33 +10,32 @@
         <h1>비밀번호 찾기</h1>
 
         <div class="radioDiv">
-    		<input type="radio" id="findByEmail" name="findType" value="memberEmail" checked/>
+            <input type="radio" id="findByEmail" name="findType" value="memberEmail" checked/>
     		<label for="findByEmail">이메일로 찾기</label>
     		<input type="radio" id="findByPhone" name="findType" value="memberPhone"/>
     		<label for="findByPhone">전화번호로 찾기</label>
     	</div>
     	<br>
-    		<div class="contentBox">
-    			<div class="input-box">
-    				<label for="memberId" class="contentLabel">아이디</label>
-    				<input type="text" name="memberId" required>
-    			</div>
-    			<div class="input-box">
-    				<label for="memberName" class="contentLabel">이름</label>
-    				<input type="text" name="memberName" required/>
-    			</div>
-    			<div id="emailDiv" class="input-box">
-    				<label for="memberEmail" class="contentLabel">이메일</label>
-    				<input type="email" id="email" name="memberEmail"/>
-    			</div>
-    			<div id="phoneDiv" class="input-box" style="display: none;">
-    				<label for="memberPhone" class="contentLabel">전화번호</label>
-    				<input type="tel" id="phone" name="memberPhone"/>
-    			</div>
-    		</div>
-    		<br/>
-
-    		<button type="submit" onclick="checkInputs();">확인</button>
+    	<div class="contentBox">
+            <div class="input-box">
+                <label for="memberId" class="contentLabel">아이디</label>
+            	<input type="text" name="memberId" required>
+            </div>
+            <div class="input-box">
+            	<label for="memberName" class="contentLabel">이름</label>
+            	<input type="text" name="memberName" required/>
+            </div>
+            <div id="emailDiv" class="input-box">
+            	<label for="memberEmail" class="contentLabel">이메일</label>
+            	<input type="email" id="email" name="memberEmail"/>
+            </div>
+            <div id="phoneDiv" class="input-box" style="display: none;">
+            	<label for="memberPhone" class="contentLabel">전화번호</label>
+            	<input type="tel" id="phone" name="memberPhone"/>
+            </div>
+        </div>
+    	<br/>
+    	<button type="submit" onclick="checkInputs();">확인</button>
     </form>
 
     <script>

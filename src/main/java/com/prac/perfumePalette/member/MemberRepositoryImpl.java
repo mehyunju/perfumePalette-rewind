@@ -13,42 +13,48 @@ public class MemberRepositoryImpl implements MemberRepository{
     // 회원가입
     @Override
     public int insertMember(Member member) {
-        int result = sql.insert("memberMapper.insertMember", member);
-        return result;
+        return sql.insert("memberMapper.insertMember", member);
     }
 
     // 아이디 유효성 검사
     @Override
     public int checkId(String memberId) {
-        int result = sql.selectOne("memberMapper.checkId", memberId);
-        return result;
+        return sql.selectOne("memberMapper.checkId", memberId);
     }
 
     // 닉네임 유효성 검사
     @Override
     public int checkNickname(String memberNickname) {
-        int result = sql.selectOne("memberMapper.checkNickname", memberNickname);
-        return result;
+        return sql.selectOne("memberMapper.checkNickname", memberNickname);
     }
 
     // 이메일 유효성 검사
     @Override
     public int checkEmail(String memberEmail) {
-        int result = sql.selectOne("memberMapper.checkEmail", memberEmail);
-        return result;
+        return sql.selectOne("memberMapper.checkEmail", memberEmail);
     }
 
     // 로그인
     @Override
     public Member login(Member member) {
-        Member loginUser = sql.selectOne("memberMapper.login", member);
-        return loginUser;
+        return sql.selectOne("memberMapper.login", member);
     }
 
     // 아이디 찾기
     @Override
     public Member findId(Member member) {
-        Member getUser = sql.selectOne("memberMapper.findId", member);
-        return getUser;
+        return sql.selectOne("memberMapper.findId", member);
+    }
+
+    // 비밀번호 찾기
+    @Override
+    public Member findPw(Member member) {
+        return sql.selectOne("memberMapper.findPw", member);
+    }
+
+    // 비밀번호 변경
+    @Override
+    public int updatePw(Member member) {
+        return sql.update("memberMapper.updatePw", member);
     }
 }

@@ -13,4 +13,8 @@ public interface MemberRepository {
     Member login(Member member);
 
     Member findId(Member member);
+
+    Member findPw(Member member);
+
+    int updatePw(Member member);
 }

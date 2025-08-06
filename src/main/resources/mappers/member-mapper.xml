@@ -64,4 +64,21 @@
             AND MEMBER_PHONE = #{memberPhone}
         </if>
     </select>
+
+    <!-- 비밀번호 찾기 -->
+    <select id="findPw" resultMap="memberResultMap">
+        SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = #{memberId} AND MEMBER_NAME = #{memberName}
+        <if test="memberEmail != null and memberEmail != '' ">
+            AND MEMBER_EMAIL = #{memberEmail}
+        </if>
+        <if test="memberPhone != null and memberPhone != '' ">
+            AND MEMBER_PHONE = #{memberPhone}
+        </if>
+    </select>
+    <!-- 비밀번호 변경 -->
+    <update id="updatePw">
+        UPDATE MEMBER_TBL
+        SET MEMBER_PW = #{memberPw}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 </mapper>
