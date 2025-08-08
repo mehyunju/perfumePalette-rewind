@@ -61,6 +61,7 @@ public class MemberRepositoryImpl implements MemberRepository{
         return sql.update("memberMapper.updatePw", member);
     }
 
+    // 주문내역조회
     @Override
     public List<OrderDetail> orderList(Member member) {
         return sql.selectList("memberMapper.orderList", member);

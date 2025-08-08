@@ -60,12 +60,14 @@ public class MemberServiceImpl implements MemberService {
         return mRepository.updatePw(member);
     }
 
-    // 주문내역조회
+    // 주문내역조회 + 결제금액 계산
     @Override
     public List<OrderDetail> orderList(Member member) {
 
+        // 회원 번호를 기준으로 주문 내역 리스트 조회
         List<OrderDetail> list = mRepository.orderList(member);
 
+        // 각 주문에 대해 결제금액 계산 (향수 가격 * 주문 수량)
         for (OrderDetail order : list) {
             order.calculateTotalPrice();
         }
