@@ -10,7 +10,7 @@
 <body>
     <jsp:include page="../common/header.jsp" />
 
-	<h1>주문내역조회</h1>
+	<h1>주문내역</h1>
 
 	<table>
         <thead>
@@ -41,6 +41,5 @@
         </tbody>
     </table>
 
-    <pre>${order}</pre>
 </body>
 </html>

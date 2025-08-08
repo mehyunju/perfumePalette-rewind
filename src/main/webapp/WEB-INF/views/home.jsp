@@ -23,11 +23,11 @@
         <!-- 로그인 했을 때 -->
         <c:if test="${sessionScope.member ne null}">
 
-            <h3>${member.memberName }님 환영합니다.</h3>
+            <h2>${member.memberNickname }님 환영합니다.</h2>
 
             <div>
                 <button onclick="location.href='/board/list'">게시판</button>
-                <button onclick="location.href='/member/orderList'">주문내역조회</button>
+                <button onclick="location.href='/member/orderList'">주문내역</button>
                 <button onclick="location.href='/member/myPage'">마이페이지</button>
                 <button onclick="location.href='/member/logout'">로그아웃</button>
             </div>
