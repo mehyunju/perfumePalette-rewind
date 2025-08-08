@@ -17,6 +17,16 @@
         <result property="memberType" column="MEMBER_TYPE" />
     </resultMap>
 
+    <resultMap type="OrderDetail" id="orderListResultMap">
+        <id property="orderNo" column="ORDER_NO" />
+        <result property="orderQuantity" column="ORDER_QUANTITY" />
+        <result property="orderStatus" column="ORDER_STATUS" />
+        <result property="memberNo" column="MEMBER_NO" />
+        <result property="perfumeNo" column="PERFUME_NO" />
+        <result property="perfumeName" column="PERFUME_NAME" />
+        <result property="perfumePrice" column="PERFUME_PRICE" />
+    </resultMap>
+
     <!-- 회원가입 -->
     <!-- mysql AUTO_INCREMENT 컬럼이니까 MEMBER_NO 생략함-->
     <insert id="insertMember">
@@ -81,4 +91,19 @@
         SET MEMBER_PW = #{memberPw}
         WHERE MEMBER_ID = #{memberId}
     </update>
+
+    <!-- 주문내역조회 -->
+    <select id="orderList" resultMap="orderListResultMap">
+        SELECT
+            o.ORDER_NO,
+            o.ORDER_QUANTITY,
+            o.ORDER_STATUS,
+            o.MEMBER_NO,
+            o.PERFUME_NO,
+            p.PERFUME_NAME,
+            p.PERFUME_PRICE
+        FROM ORDER_DETAIL_TBL o
+        JOIN PERFUME_TBL p ON o.PERFUME_NO = p.PERFUME_NO
+        WHERE o.MEMBER_NO = #{memberNo}
+    </select>
 </mapper>

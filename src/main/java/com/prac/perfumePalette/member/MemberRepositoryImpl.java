@@ -1,8 +1,11 @@
 package com.prac.perfumePalette.member;
 
+import com.prac.perfumePalette.order.OrderDetail;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class MemberRepositoryImpl implements MemberRepository{
@@ -56,5 +59,10 @@ public class MemberRepositoryImpl implements MemberRepository{
     @Override
     public int updatePw(Member member) {
         return sql.update("memberMapper.updatePw", member);
+    }
+
+    @Override
+    public List<OrderDetail> orderList(Member member) {
+        return sql.selectList("memberMapper.orderList", member);
     }
 }

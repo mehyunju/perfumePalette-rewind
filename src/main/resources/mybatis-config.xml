@@ -8,6 +8,7 @@
 
     <typeAliases>
         <typeAlias type="com.prac.perfumePalette.member.Member" alias="Member" />
+        <typeAlias type="com.prac.perfumePalette.order.OrderDetail" alias="OrderDetail" />
     </typeAliases>
 
     <mappers>

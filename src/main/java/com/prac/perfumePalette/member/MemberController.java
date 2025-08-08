@@ -1,6 +1,7 @@
 package com.prac.perfumePalette.member;
 
 import com.prac.perfumePalette.Alert;
+import com.prac.perfumePalette.order.OrderDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -330,8 +332,30 @@ public class MemberController {
 
     //============ 주문내역 조회 =================
     @GetMapping("/orderList")
-    public ModelAndView orderList(ModelAndView mv) {
-        mv.setViewName("member/orderList");
+    public ModelAndView orderList(ModelAndView mv, HttpSession session) {
+
+        try {
+            // 회원정보 가져오기
+            Member member = (Member) session.getAttribute("member");
+
+            if (member == null) {
+                Alert alert = new Alert("/member/login", "로그인이 필요한 서비스입니다.");
+                mv.addObject("alert", alert);
+                mv.setViewName("common/alert");
+            }
+
+            // 회원번호 기준으로 주문내역조회(orderDatail 목록)
+            List<OrderDetail> orderList = mService.orderList(member);
+            System.out.println("조회된 주문 개수: " + orderList.size()); // 뜨는지 확인..
+            System.out.println("세션 memberNo: " + member.getMemberNo());
+
+            mv.addObject("orderList", orderList);
+            mv.setViewName("member/orderList");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mv.addObject("msg", e.getMessage()).setViewName("common/error");
+        }
         return mv;
     }
 

@@ -1,7 +1,10 @@
 package com.prac.perfumePalette.member;
 
+import com.prac.perfumePalette.order.OrderDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -55,5 +58,18 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public int updatePw(Member member) {
         return mRepository.updatePw(member);
+    }
+
+    // 주문내역조회
+    @Override
+    public List<OrderDetail> orderList(Member member) {
+
+        List<OrderDetail> list = mRepository.orderList(member);
+
+        for (OrderDetail order : list) {
+            order.calculateTotalPrice();
+        }
+
+        return list;
     }
 }

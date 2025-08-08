@@ -1,5 +1,9 @@
 package com.prac.perfumePalette.member;
 
+import com.prac.perfumePalette.order.OrderDetail;
+
+import java.util.List;
+
 public interface MemberRepository {
 
     int insertMember(Member member);
@@ -17,4 +21,6 @@ public interface MemberRepository {
     Member findPw(Member member);
 
     int updatePw(Member member);
+
+    List<OrderDetail> orderList(Member member);
 }
