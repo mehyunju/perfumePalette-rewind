@@ -26,7 +26,11 @@ public interface MemberService {
 
     Member selectMemberById(String memberId);
 
+    int changeMyInfo(Member member);
+
     Member checkPw(Member member);
 
     int bye(Member member);
+
+    Member selectOne(String memberId);
 }

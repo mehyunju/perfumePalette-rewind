@@ -343,8 +343,8 @@ public class MemberController {
     }
 
     //============ 내 정보 수정 =================
-    @GetMapping("/changeMyInfo")
-    public ModelAndView changeMyInfo(ModelAndView mv, HttpSession session) {
+    @GetMapping("/myInfo")
+    public ModelAndView myInfo(ModelAndView mv, HttpSession session) {
         try {
             // 로그인한 사용자인지 확인
             Member member = (Member) session.getAttribute("member");
@@ -362,7 +362,7 @@ public class MemberController {
 
             // 뷰에 넘겨주기
             mv.addObject("memberOne", memberFromDb);
-            mv.setViewName("member/changeMyInfo");
+            mv.setViewName("member/myInfo");
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -372,6 +372,38 @@ public class MemberController {
         return mv;
     }
 
+    @PostMapping("/changeMyInfo")
+    public ModelAndView changeMyInfo(ModelAndView mv, @ModelAttribute Member member, HttpSession session) {
+            try {
+                // 주소 합치기
+                String fullAddr = member.getMemberAddr() + " / "
+                        + member.getMemberDetailAddr()
+                        + " (" + member.getPostcode() + ")";
+                member.setMemberAddr(fullAddr);
+
+                int result = mService.changeMyInfo(member);
+
+                // 수정 성공 후
+                if (result > 0) {
+                    // 수정된 최신 회원 정보 다시 불러오기(최신 세션으로 갱신)
+                    Member refreshed = mService.selectOne(member.getMemberId());
+                    session.setAttribute("member", refreshed);
+
+                    Alert alert = new Alert("/member/myInfo", "내 정보 수정에 성공했습니다.");
+                    mv.addObject("alert", alert);
+                    mv.setViewName("common/alert");
+                } else {
+                    Alert alert = new Alert("/member/myInfo", "내 정보 수정에 실패했습니다.");
+                    mv.addObject("alert", alert);
+                    mv.setViewName("common/alert");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mv.addObject("msg", e.getMessage()).setViewName("common/error");
+            }
+            return mv;
+        }
+
     //============ 주문내역 조회 =================
     @GetMapping("/orderList")
     public ModelAndView orderList(ModelAndView mv, HttpSession session) {
@@ -379,7 +411,6 @@ public class MemberController {
         try {
             // 회원정보 가져오기
             Member member = (Member) session.getAttribute("member");
-            System.out.println("회원정보여기!!!!!!-> " + member);
 
             if (member == null) {
                 Alert alert = new Alert("/member/login", "로그인이 필요한 서비스입니다.");

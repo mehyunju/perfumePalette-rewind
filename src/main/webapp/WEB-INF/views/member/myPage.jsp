@@ -11,7 +11,7 @@
 
     <h1>마이페이지</h1>
 
-    <button onclick="location.href='/member/changeMyInfo'">내 정보 수정</button>
+    <button onclick="location.href='/member/myInfo'">내정보수정</button>
     <button onclick="location.href='/member/myBoard'">작성게시글</button>
     <button onclick="location.href='/member/myComment'">작성댓글</button>
     <button onclick="location.href='/member/bye'">회원탈퇴</button>

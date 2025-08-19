@@ -67,10 +67,22 @@ public class MemberRepositoryImpl implements MemberRepository{
         return sql.selectList("memberMapper.orderList", member);
     }
 
-    // 내정보수정 - 회원정보가져오기
+    // 내 정보 - 회원정보가져오기
     @Override
     public Member selectMemberById(String memberId) {
         return sql.selectOne("memberMapper.selectMemberById", memberId);
+    }
+
+    // 내 정보 수정
+    @Override
+    public int changeMyInfo(Member member) {
+        return sql.update("memberMapper.changeMyInfo", member);
+    }
+
+    // 정보수정 후 세션갱신
+    @Override
+    public Member selectOne(String memberId) {
+        return sql.selectOne("memberMapper.selectOne", memberId);
     }
 
     // 탈퇴 비밀번호 확인

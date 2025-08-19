@@ -9,16 +9,14 @@
 <body>
     <jsp:include page="../common/header.jsp" />
 
-    <form action="/member/myPage" method="post" onsubmit="return totalChk();">
+    <form action="/member/changeMyInfo" method="post" onsubmit="return totalChk();">
         <h1>마이페이지</h1>
 
      	<span>*</span>수정가능사항
      	<br><br>
 
      	<label>아이디</label>
-     	<c:if test="${not empty memberOne}">
-     	    <input class="input-box" type="text" name="memberId" value="${memberOne.memberId }" readonly>
-     	</c:if>
+     	<input class="input-box" type="text" name="memberId" value="${memberOne.memberId }" readonly>
      	<br><br>
 
      	<label>닉네임<span class="star">*</span></label>
@@ -73,7 +71,6 @@
             },
             success : function(data) {
                if (data == 0) {
-                  /* $('#nickName_ok').css("display", "inline-block"); */
                   $('#nickName_not_ok2').css("display", "none");
                   $('#nickName_not_ok3').css("display", "none");
                } else if (data == -2) {
@@ -93,38 +90,6 @@
          });
       };
 
-      /* 비밀번호 확인 */
-      function chkPw() {
-         var memberPw = $('input[name=memberPw]').val();
-         var reMemberPw = $('input[name=reMemberPw]').val();
-         $.ajax({
-            url : '/member/pwChk',
-            type : 'post',
-            data : {
-               memberPw : memberPw,
-               reMemberPw : reMemberPw
-            },
-            success : function(data) {
-               if (data == 0) {
-                  /* $('#pw_ok').css("display", "inline-block"); */
-                  $('#pw_not_ok2').css("display", "none");
-                  $('#pw_not_ok3').css("display", "none");
-               } else if (data == -2) {
-                  $('#pw_not_ok2').css("display", "none");
-                  $('#pw_not_ok3').css("display", "inline-block");
-                  $('input[name=memberPw]').focus();
-               } else if (data > 0) {
-                  $('#pw_not_ok2').css("display", "inline-block");
-                  $('#pw_not_ok3').css("display", "none");
-                  $('input[name=reMemberPw]').focus();
-               }
-            },
-            error : function() {
-               alert("에러발생");
-            }
-         });
-      };
-
       /* 이메일 중복 확인 */
       function chkEmail() {
          var memberEmail = $('input[name=memberEmail]').val();
@@ -136,7 +101,6 @@
             },
             success : function(data) {
                if (data == 0) {
-                  /* $('#email_ok').css("display", "inline-block"); */
                   $('#email_not_ok2').css("display", "none");
                   $('#email_not_ok3').css("display", "none");
                   $('#email_not_ok4').css("display", "none");
@@ -227,11 +191,7 @@
       /* 유효성 체크 통과시 회원가입이 가능하게함 */
       function totalChk() {
 
-         var memberId = $("input[name=memberId]");
          var memberNickname = $("input[name=memberNickname]");
-         var memberPw = $("input[name=memberPw]");
-         var reMemberPw = $("input[name=reMemberPw]");
-         var memberName = $("input[name=memberName]");
          var memberEmail = $("input[name=memberEmail]");
          var memberPhone = $("input[name=memberPhone]");
          var memberAddress = $("#address");
@@ -241,35 +201,6 @@
          if (memberNickname.val() == '') {
             alert("닉네임을 입력하세요.");
             memberNickname.focus();
-            return false;
-         }
-
-         if (memberPw.val() == '') {
-            alert("비밀번호를 입력하세요.");
-            memberPw.focus();
-            return false;
-         }
-
-         if (reMemberPw.val() == '') {
-            alert("비밀번호를 한번 더 입력하세요.");
-            reMemberPw.focus();
-            return false;
-         }
-
-         if (memberPw.val() != reMemberPw.val()) {
-            alert("비밀번호가 일치하지 않습니다.");
-            reMemberPw.focus();
-            return false;
-         }
-
-         if (memberName.val() == '') {
-            alert("이름을 입력하세요.");
-            memberName.focus();
-            return false;
-         } else if (memberName.val().length < 2
-               || memberName.val().length > 20) {
-            alert("이름은 2~20자여야 합니다.");
-            memberName.focus();
             return false;
          }
 
@@ -303,12 +234,6 @@
             return false;
          }
 
-         if (idChkNum != 0) {
-            alert("사용 불가능한 아이디입니다.");
-            memberId.focus();
-            return false;
-         }
-
          if (nicknameChkNum != 0) {
             alert("사용 불가능한 닉네임입니다.");
             memberNickname.focus();
@@ -318,12 +243,6 @@
          if (emailChkNum != 0) {
             alert("사용 불가능한 이메일입니다.");
             memberEmail.focus();
-            return false;
-         }
-
-         if (pwChkNum != 0) {
-            alert("비밀번호를 다시 확인하세요.");
-            memberPw.focus();
             return false;
          }
 

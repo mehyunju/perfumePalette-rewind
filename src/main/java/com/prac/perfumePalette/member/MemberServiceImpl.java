@@ -75,10 +75,22 @@ public class MemberServiceImpl implements MemberService {
         return list;
     }
 
-    // 내 정보 수정 - 회원정보가져오기
+    // 내 정보 - 회원정보가져오기
     @Override
     public Member selectMemberById(String memberId) {
         return mRepository.selectMemberById(memberId);
+    }
+
+    // 내 정보 수정
+    @Override
+    public int changeMyInfo(Member member) {
+        return mRepository.changeMyInfo(member);
+    }
+
+    // 내정보수정 후 세션 갱신
+    @Override
+    public Member selectOne(String memberId) {
+        return mRepository.selectOne(memberId);
     }
 
     // 탈퇴 비밀번호 확인

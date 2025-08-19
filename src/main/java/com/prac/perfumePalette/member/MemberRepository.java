@@ -26,6 +26,10 @@ public interface MemberRepository {
 
     Member selectMemberById(String memberId);
 
+    int changeMyInfo(Member member);
+
+    Member selectOne(String memberId);
+
     Member checkPw(Member member);
 
     int bye(Member member);
