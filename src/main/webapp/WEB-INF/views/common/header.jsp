@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-        <h2>${member.memberName }님</h2>
+        <h2>${member.memberNickname }님</h2>
 
         <button onclick="location.href='/'">홈</button>
         <button onclick="location.href='/board/list'">게시판</button>
