@@ -23,4 +23,10 @@ public interface MemberService {
     int updatePw(Member member);
 
     List<OrderDetail> orderList(Member member);
+
+    Member selectMemberById(String memberId);
+
+    Member checkPw(Member member);
+
+    int bye(Member member);
 }

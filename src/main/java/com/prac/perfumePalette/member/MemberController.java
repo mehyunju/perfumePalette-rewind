@@ -27,22 +27,16 @@ public class MemberController {
         return mv;
     }
     @PostMapping("/enroll")
-    public ModelAndView enroll(ModelAndView mv,
-                               @ModelAttribute Member member,
-                               @RequestParam("memberDetailAddr") String memberDetailAddr,
-                               @RequestParam("postcode") String postcode) {
-        try {
-            // 주소 문자열 조합 후 세팅
-            // 주소 조합 문자열 가독성 높이기
-            String fullAddr = member.getMemberAddr() + " / " + memberDetailAddr + "(" + postcode + ")";
-            member.setMemberAddr(fullAddr);
+    public ModelAndView enroll(ModelAndView mv, @ModelAttribute Member member) {
 
+        try {
             int result = mService.insertMember(member);
 
             if (result > 0) {
                 Alert alert = new Alert("/member/login", "회원가입에 성공했습니다");
                 mv.addObject("alert", alert);
                 mv.setViewName("common/alert");
+
             } else {
                 Alert alert = new Alert("/member/enroll", "회원가입에 실패했습니다");
                 mv.addObject("alert", alert);
@@ -100,6 +94,7 @@ public class MemberController {
     @PostMapping(value = "/emailChk", produces = "application/json; charset=UTF-8")
     @ResponseBody
     public int emailCheck(@RequestParam String memberEmail) {
+
         int result = mService.checkEmail(memberEmail);
 
         // @ 앞에 올 수 있는 문자들 (영문, 숫자, +, _, ., - 허용)
@@ -294,7 +289,6 @@ public class MemberController {
     @PostMapping("/changePw")
     public ModelAndView changePw(ModelAndView mv, @ModelAttribute Member member,
                                  String newPw, String confirmPw) {
-
         try {
             // 비밀번호 유효성 체크
             String pwPattern = "^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$";
@@ -330,6 +324,54 @@ public class MemberController {
         return mv;
     }
 
+    //============ 마이페이지 =================
+    @GetMapping("/myPage")
+    public ModelAndView myPage(ModelAndView mv, HttpSession session) {
+
+        // 로그인한 사용자인지 확인
+        Member member = (Member) session.getAttribute("member");
+
+        // 직접접근 제한
+        if (member == null) {
+            Alert alert = new Alert("/member/login", "로그인이 필요한 서비스입니다.");
+            mv.addObject("alert", alert);
+            mv.setViewName("common/alert");
+        }
+
+        mv.setViewName("member/myPage");
+        return mv;
+    }
+
+    //============ 내 정보 수정 =================
+    @GetMapping("/changeMyInfo")
+    public ModelAndView changeMyInfo(ModelAndView mv, HttpSession session) {
+        try {
+            // 로그인한 사용자인지 확인
+            Member member = (Member) session.getAttribute("member");
+
+            // 직접접근 제한
+            if (member == null) {
+                Alert alert = new Alert("/member/login", "로그인이 필요한 서비스입니다.");
+                mv.addObject("alert", alert);
+                mv.setViewName("common/alert");
+                return mv;
+            }
+
+            // db에서 회원정보 가져오기
+            Member memberFromDb = mService.selectMemberById(member.getMemberId());
+
+            // 뷰에 넘겨주기
+            mv.addObject("memberOne", memberFromDb);
+            mv.setViewName("member/changeMyInfo");
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            mv.addObject("msg", e.getMessage());
+            mv.setViewName("common/error");
+        }
+        return mv;
+    }
+
     //============ 주문내역 조회 =================
     @GetMapping("/orderList")
     public ModelAndView orderList(ModelAndView mv, HttpSession session) {
@@ -337,6 +379,7 @@ public class MemberController {
         try {
             // 회원정보 가져오기
             Member member = (Member) session.getAttribute("member");
+            System.out.println("회원정보여기!!!!!!-> " + member);
 
             if (member == null) {
                 Alert alert = new Alert("/member/login", "로그인이 필요한 서비스입니다.");
@@ -359,4 +402,58 @@ public class MemberController {
         return mv;
     }
 
+    //============ 회원탈퇴 =================
+    @GetMapping("/bye")
+    public ModelAndView bye(ModelAndView mv, HttpSession session) {
+
+        mv.setViewName("member/bye");
+
+        Member member = (Member) session.getAttribute("member");
+
+        if (member == null) {
+            Alert alert = new Alert("/member/login", "로그인이 필요한 서비스입니다.");
+            mv.addObject("alert", alert);
+            mv.setViewName("common/alert");
+        }
+        return mv;
+    }
+
+    @PostMapping("/bye")
+    public ModelAndView bye(HttpServletRequest request, @ModelAttribute Member member, ModelAndView mv) {
+
+        try {
+            // 입력한 비밀번호를 확인하고 맞지 않으면 회원탈퇴 실패 처리
+            Member checkPw = mService.checkPw(member);
+
+            if (checkPw == null || !checkPw.getMemberPw().equals(member.getMemberPw())) {
+                Alert alert = new Alert("/member/bye", "비밀번호가 일치하지 않습니다");
+                mv.addObject("alert", alert);
+                mv.setViewName("common/alert");
+
+            } else {
+                // 회원탈퇴 처리
+                member.setMemberStatus(0);
+                int result = mService.bye(member);
+
+                if (result > 0) {
+                    // 세션 무효화 후 메인 페이지로 이동
+                    HttpSession session = request.getSession();
+                    if (session != null) {
+                        session.invalidate();
+                    }
+                    Alert alert = new Alert("/", "탈퇴처리 되었습니다. 이용해주셔서 감사합니다.");
+                    mv.addObject("alert", alert);
+                    mv.setViewName("common/alert");
+                } else {
+                    Alert alert = new Alert("/member/bye", "회원 탈퇴에 실패했습니다. 다시 시도해주세요.");
+                    mv.addObject("alert", alert);
+                    mv.setViewName("common/alert");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            mv.addObject("msg", e.getMessage()).setViewName("common/error");
+        }
+        return mv;
+    }
 }

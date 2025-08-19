@@ -11,6 +11,8 @@
         <result property="memberEmail" column="MEMBER_EMAIL" />
         <result property="memberPhone" column="MEMBER_PHONE" />
         <result property="memberAddr" column="MEMBER_ADDR" />
+        <result property="memberDetailAddr" column="memberDetailAddr" />
+        <result property="postcode" column="postcode" />
         <result property="memberDate" column="MEMBER_DATE" />
         <result property="memberEndDate" column="MEMBER_END_DATE" />
         <result property="memberStatus" column="MEMBER_STATUS" />
@@ -31,12 +33,12 @@
     <!-- mysql AUTO_INCREMENT 컬럼이니까 MEMBER_NO 생략함-->
     <insert id="insertMember">
         INSERT INTO MEMBER_TBL(
-            MEMBER_ID, MEMBER_NICKNAME, MEMBER_PW,
-            MEMBER_NAME, MEMBER_EMAIL, MEMBER_PHONE, MEMBER_ADDR,
+            MEMBER_ID, MEMBER_NICKNAME, MEMBER_PW, MEMBER_NAME, MEMBER_EMAIL,
+            MEMBER_PHONE, MEMBER_ADDR, memberDetailAddr, postcode,
             MEMBER_DATE, MEMBER_STATUS, MEMBER_TYPE)
         VALUES(
-            #{memberId}, #{memberNickname}, #{memberPw},
-            #{memberName}, #{memberEmail}, #{memberPhone}, #{memberAddr},
+            #{memberId}, #{memberNickname}, #{memberPw}, #{memberName}, #{memberEmail},
+            #{memberPhone}, #{memberAddr}, #{memberDetailAddr}, #{postcode},
             DEFAULT, DEFAULT, DEFAULT)
     </insert>
 
@@ -106,4 +108,22 @@
         JOIN PERFUME_TBL p ON o.PERFUME_NO = p.PERFUME_NO
         WHERE o.MEMBER_NO = #{memberNo}
     </select>
+
+    <!-- 내 정보 수정 - 회원정보가져오기-->
+    <select id="selectMemberById" resultMap="memberResultMap">
+        SELECT * FROM MEMBER_TBL
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <!-- 탈퇴 비밀번호 확인 -->
+    <select id="checkPw" resultMap="memberResultMap">
+        SELECT * FROM MEMBER_TBL
+        WHERE MEMBER_ID = #{memberId} AND MEMBER_PW = #{memberPw} AND MEMBER_STATUS = 1
+    </select>
+
+    <!-- 회원 탈퇴 -->
+    <update id="bye">
+        UPDATE MEMBER_TBL SET MEMBER_STATUS = 0
+        WHERE MEMBER_ID = #{memberId} AND MEMBER_STATUS = 1
+    </update>
 </mapper>
